@@ -160,8 +160,8 @@ class sequential_data:
         #     if ids == 1:
         #         rh = np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
         #                        hand_landmarks.landmark]).flatten() if True else np.zeros(21 * 3)
-        # # x = np.concatenate([lh, rh])
-        # # return x.tolist()
+        # x = np.concatenate([lh, rh])
+        # return x.tolist()
         #     return np.concatenate([lh, rh])
 
     def Draw_whole_body(self):
