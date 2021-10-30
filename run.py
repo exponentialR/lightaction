@@ -1,5 +1,5 @@
-from handdata import sequential_data
+from handdata import human_pose_data
 
-y = sequential_data()
+y = human_pose_data()
 # y.display_camera_with_mp()
-y.draw_only_hands()
+y.collect_data_WHOLE()

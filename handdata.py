@@ -3,11 +3,17 @@ import numpy as np
 import mediapipe as mp
 import os
 from pathlib import Path
-import json
 
 mp_hands = mp.solutions.hands  # Holistic model
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic  # Drawing utilities
+
+current_working_directory = os.path.dirname(__file__)
+ROOT_FOLDER = os.path.join(current_working_directory, 'data')
+relative_data_path = 'data/iamsMediapipe.iams'
+absolute_iams_path = Path(os.path.join(current_working_directory, relative_data_path))
+f = open(absolute_iams_path)
+import json
 
 
 def Detection_pipeline(image, holistic):
@@ -28,6 +34,8 @@ class human_pose_data:
         self.hand_connect = self.solutions.HAND_CONNECTIONS
         self.pose_connect = self.solutions.POSE_CONNECTIONS
         self.face_connect = self.solutions.FACEMESH_TESSELATION
+        self.f_content = json.load(f)
+        self.ROOT_FOLDER = os.path.join(ROOT_FOLDER, self.f_content['Data_Directory'])
         # self.hands = mp_hands
 
     def draw_landmarks(self, image, coords):
@@ -130,7 +138,7 @@ class human_pose_data:
 
     @staticmethod
     def extract_full_body(coords):
-        if coords.multi_hand_landmarks:
+        if coords:
             """Function to extract coordinates of keypoints on both hands"""
             right_hand = np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
                                    coords.right_hand_landmarks.landmark]).flatten() if coords.right_hand_landmarks else np.zeros(
@@ -139,9 +147,9 @@ class human_pose_data:
                                   coords.left_hand_landmarks.landmark]).flatten() if coords.left_hand_landmarks else np.zeros(
                 21 * 3)
             pose = np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
-                             coords.pose_landmarks]).flatten() if coords.pose_landmarks else np.zeros(132)
+                             coords.pose_landmarks.landmark]).flatten() if coords.pose_landmarks else np.zeros(132)
             facial = np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
-                               coords.face_landmarks]).flatten() if coords.face_landmarks else np.zeros(1)
+                               coords.face_landmarks.landmark]).flatten() if coords.face_landmarks else np.zeros(1)
             return np.concatenate([right_hand, left_hand, pose, facial])
 
     @staticmethod
@@ -165,6 +173,8 @@ class human_pose_data:
         return np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
                          coords.pose_landmarks]).flatten() if coords.pose_landmarks else np.zeros(132)
 
+
+
     def _whole_body(self):
         camera = cv2.VideoCapture(0)
         with self.holistic as holistic:
@@ -181,7 +191,7 @@ class human_pose_data:
                 cv2.destroyAllWindows()
 
     #
-    def collect_data(self):
+    def collect_data_WHOLE(self):
         camera = cv2.VideoCapture(0)
         """
         Get current working directory
@@ -194,27 +204,31 @@ class human_pose_data:
 
         f = open(abs_iams_path)
         f_content = json.load(f)
-        with self.holistic as holistic:
+        with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
             for action in f_content['actions']:
                 for folder in range(f_content['subfolder_length']):
                     for img_ in range(f_content['video_length']):
                         _, image = camera.read()
                         image, coords = Detection_pipeline(image, holistic)
+                        self.draw_landmarks(image, coords)
+
                         if img_ == 0:
                             cv2.putText(image, 'Starting Data Collection into {}'.format(f_content['Data_Directory']),
-                                        (100, 100), cv2.FONT_HERSHEY_TRIPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                                        (100, 100), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
-                                        (15, 12), cv2.FONT_HERSHEY_TRIPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
                             cv2.waitKey(2000)
 
                         else:
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
-                                        (15, 12), cv2.FONT_HERSHEY_PLAIN, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
 
+
+
                         keypoints = self.extract_full_body(coords)
-                        keypoint_path = os.path.join(f_content['Data_Subfolder'], action, str(folder), str(img_))
+                        keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
                         np.save(keypoint_path, keypoints)
                         if cv2.waitKey(10) != ord('q'):
                             continue
