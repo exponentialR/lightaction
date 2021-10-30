@@ -209,20 +209,21 @@ class human_pose_data:
                 for folder in range(f_content['subfolder_length']):
                     for img_ in range(f_content['video_length']):
                         _, image = camera.read()
+                        image = cv2.flip(image, 1)
                         image, coords = Detection_pipeline(image, holistic)
                         self.draw_landmarks(image, coords)
 
                         if img_ == 0:
                             cv2.putText(image, 'Starting Data Collection into {}'.format(f_content['Data_Directory']),
-                                        (100, 100), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                                        (50, 50), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
-                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
                             cv2.waitKey(2000)
 
                         else:
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
-                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
 
 
@@ -234,3 +235,124 @@ class human_pose_data:
                             continue
                         camera.release()
                         cv2.destroyAllWindows()
+
+    def collect_data_HAND(self):
+        camera = cv2.VideoCapture(0)
+        """
+        Displays landmark, saves the hand keypoints to corresponding subfolders"""
+
+        cur_scr_dir = os.path.dirname(__file__)  # This is the absolute directory the script is in
+        relative_data_path = "data/iamsMediapipe.iams"
+        abs_iams_path = Path(os.path.join(cur_scr_dir, relative_data_path))
+
+        f = open(abs_iams_path)
+        f_content = json.load(f)
+        with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+            for action in f_content['actions']:
+                for folder in range(f_content['subfolder_length']):
+                    for img_ in range(f_content['video_length']):
+                        _, image = camera.read()
+                        image = cv2.flip(image, 1)
+                        image, coords = Detection_pipeline(image, holistic)
+                        self.draw_landmarks(image, coords)
+
+                        if img_ == 0:
+                            cv2.putText(image, 'Starting Data Collection into {}'.format(f_content['Data_Directory']),
+                                        (100, 100), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.imshow('Hand Data Collection Feed', image)
+                            cv2.waitKey(1000)
+
+                        else:
+                            cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.imshow('Hand Data Collection Feed', image)
+
+                        keypoints = self.extract_only_hands(coords)
+                        keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
+                        np.save(keypoint_path, keypoints)
+                        if cv2.waitKey(10) != ord('q'):
+                            continue
+                        camera.release()
+                        cv2.destroyAllWindows()
+
+    def collect_data_POSE(self):
+        camera = cv2.VideoCapture(0)
+        """
+        Displays landmark, saves the POSE keypoints to corresponding subfolders"""
+        cur_scr_dir = os.path.dirname(__file__)  # This is the absolute directory the script is in
+        relative_data_path = "data/iamsMediapipe.iams"
+        abs_iams_path = Path(os.path.join(cur_scr_dir, relative_data_path))
+
+        f = open(abs_iams_path)
+        f_content = json.load(f)
+        with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+            for action in f_content['actions']:
+                for folder in range(f_content['subfolder_length']):
+                    for img_ in range(f_content['video_length']):
+                        _, image = camera.read()
+                        image = cv2.flip(image, 1)
+                        image, coords = Detection_pipeline(image, holistic)
+                        self.draw_landmarks(image, coords)
+
+                        if img_ == 0:
+                            cv2.putText(image, 'Starting Data Collection into {}'.format(f_content['Data_Directory']),
+                                        (100, 100), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.imshow('POSE Data Collection Feed', image)
+                            cv2.waitKey(2000)
+
+                        else:
+                            cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.imshow('POSE Data Collection Feed', image)
+
+                        keypoints = self.extract_only_pose(coords)
+                        keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
+                        np.save(keypoint_path, keypoints)
+                        if cv2.waitKey(10) != ord('q'):
+                            continue
+                        camera.release()
+                        cv2.destroyAllWindows()
+
+    def collect_data_FACE(self):
+        camera = cv2.VideoCapture(0)
+        """
+        Displays landmark, saves the facial keypoints to corresponding subfolders"""
+        cur_scr_dir = os.path.dirname(__file__)  # This is the absolute directory the script is in
+        relative_data_path = "data/iamsMediapipe.iams"
+        abs_iams_path = Path(os.path.join(cur_scr_dir, relative_data_path))
+
+        f = open(abs_iams_path)
+        f_content = json.load(f)
+        with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+            for action in f_content['actions']:
+                for folder in range(f_content['subfolder_length']):
+                    for img_ in range(f_content['video_length']):
+                        _, image = camera.read()
+                        image = cv2.flip(image, 1)
+                        image, coords = Detection_pipeline(image, holistic)
+                        self.draw.draw_landmarks(image, coords.face_landmarks, self.face_connect)
+                        if img_ == 0:
+                            cv2.putText(image, 'Starting Data Collection into {}'.format(f_content['Data_Directory']),
+                                        (50, 50), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
+                            cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
+                            cv2.imshow('FACE Data Collection Feed', image)
+                            cv2.waitKey(2000)
+
+                        else:
+                            cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
+                            cv2.imshow('FACE Data Collection Feed', image)
+
+                        keypoints = self.extract_only_pose(coords)
+                        keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
+                        np.save(keypoint_path, keypoints)
+                        if cv2.waitKey(10) != ord('q'):
+                            continue
+                        camera.release()
+                        cv2.destroyAllWindows()
+
