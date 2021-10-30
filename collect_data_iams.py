@@ -76,7 +76,7 @@ class human_pose_data:
                             cv2.putText(image, text, coord, cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 100, 200), 2,
                                         cv2.LINE_AA)
 
-                        elif classification.classification[0].index == idx:
+                        elif classification.classification[0].index = = idx:
                             hand_label = classification.classification[0].label
                             coord = tuple(
                                 np.multiply(np.array((hand_landmark.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x,
