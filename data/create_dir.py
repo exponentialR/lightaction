@@ -28,7 +28,7 @@ def create_dir(actions, subfolder_numbers, data_dir):
     """This function creates the data folder and corresponding subfolders,
     as defined by you on the command line. You can have as many data instances and subfolders as possible
     The file write logic on the last few lines overwrites the .iams file everytime you run this code
-    which is correspondingly used in handdata.py. This function also """
+    which is correspondingly used in collect_data_iams.py. This function also """
 
     # data_dir = 'handdata'
     i = 1
@@ -103,7 +103,7 @@ def create_dir(actions, subfolder_numbers, data_dir):
                 #
                 # header.close()
 
-    print(data_dir)
+    print('Your data Folder has been Created: Folder Name:{}.'.format(data_dir))
 
 
 if __name__ == '__main__':
