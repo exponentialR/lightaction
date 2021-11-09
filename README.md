@@ -12,7 +12,8 @@ Open Pycharm Terminal and type
 
 
 ```bash
-run requirements.txt```
+run requirements.txt
+```
 
 
 
