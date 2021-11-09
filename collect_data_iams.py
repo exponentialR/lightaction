@@ -76,7 +76,7 @@ class human_pose_data:
                             cv2.putText(image, text, coord, cv2.FONT_HERSHEY_TRIPLEX, 1, (255, 100, 200), 2,
                                         cv2.LINE_AA)
 
-                        elif classification.classification[0].index = = idx:
+                        elif classification.classification[0].index == idx:
                             hand_label = classification.classification[0].label
                             coord = tuple(
                                 np.multiply(np.array((hand_landmark.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x,
@@ -149,7 +149,7 @@ class human_pose_data:
             pose = np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
                              coords.pose_landmarks.landmark]).flatten() if coords.pose_landmarks else np.zeros(132)
             facial = np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
-                               coords.face_landmarks.landmark]).flatten() if coords.face_landmarks else np.zeros(1)
+                               coords.face_landmarks.landmark]).flatten() if coords.face_landmarks else np.zeros(1404)
             return np.concatenate([right_hand, left_hand, pose, facial])
 
     @staticmethod
@@ -166,14 +166,12 @@ class human_pose_data:
     @staticmethod
     def extract_only_facial(coords):
         return np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
-                         coords.face_landmarks]).flatten() if coords.face_landmarks else np.zeros(1)
+                         coords.face_landmarks]).flatten() if coords.face_landmarks else np.zeros(1404)
 
     @staticmethod
     def extract_only_pose(coords):
         return np.array([[landmarked.x, landmarked.y, landmarked.z] for landmarked in
                          coords.pose_landmarks]).flatten() if coords.pose_landmarks else np.zeros(132)
-
-
 
     def _whole_body(self):
         camera = cv2.VideoCapture(0)
@@ -192,7 +190,8 @@ class human_pose_data:
 
     #
     def collect_data_WHOLE(self):
-        camera = cv2.VideoCapture(0)
+        cam = cv2.VideoCapture(0)
+        camera = cv2.VideoCapture(1)
         """
         Get current working directory
         Get the list of actions
@@ -226,20 +225,16 @@ class human_pose_data:
                                         (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
 
-
-
                         keypoints = self.extract_full_body(coords)
                         keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
                         np.save(keypoint_path, keypoints)
-                        if cv2.waitKey(10) != ord('q'):
-                            continue
-                        camera.release()
-                        cv2.destroyAllWindows()
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            break
 
     def collect_data_HAND(self):
         camera = cv2.VideoCapture(0)
         """
-        Displays landmark, saves the hand keypoints to corresponding subfolders"""
+        Displays hand keypoints, saves the hand keypoints to corresponding subfolders"""
 
         cur_scr_dir = os.path.dirname(__file__)  # This is the absolute directory the script is in
         relative_data_path = "data/iamsMediapipe.iams"
@@ -262,7 +257,7 @@ class human_pose_data:
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
                                         (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 3, cv2.LINE_AA)
                             cv2.imshow('Hand Data Collection Feed', image)
-                            cv2.waitKey(1000)
+                            cv2.waitKey(2000)
 
                         else:
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
@@ -272,10 +267,8 @@ class human_pose_data:
                         keypoints = self.extract_only_hands(coords)
                         keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
                         np.save(keypoint_path, keypoints)
-                        if cv2.waitKey(10) != ord('q'):
-                            continue
-                        camera.release()
-                        cv2.destroyAllWindows()
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            break
 
     def collect_data_POSE(self):
         camera = cv2.VideoCapture(0)
@@ -312,10 +305,8 @@ class human_pose_data:
                         keypoints = self.extract_only_pose(coords)
                         keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
                         np.save(keypoint_path, keypoints)
-                        if cv2.waitKey(10) != ord('q'):
-                            continue
-                        camera.release()
-                        cv2.destroyAllWindows()
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            break
 
     def collect_data_FACE(self):
         camera = cv2.VideoCapture(0)
@@ -351,8 +342,5 @@ class human_pose_data:
                         keypoints = self.extract_only_pose(coords)
                         keypoint_path = os.path.join(self.ROOT_FOLDER, action, str(folder), str(img_))
                         np.save(keypoint_path, keypoints)
-                        if cv2.waitKey(10) != ord('q'):
-                            continue
-                        camera.release()
-                        cv2.destroyAllWindows()
-
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            break
