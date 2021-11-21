@@ -190,8 +190,8 @@ class human_pose_data:
 
     #
     def collect_data_WHOLE(self):
-        cam = cv2.VideoCapture(0)
-        camera = cv2.VideoCapture(1)
+        # cam = cv2.VideoCapture(0)
+        camera = cv2.VideoCapture(0)
         """
         Get current working directory
         Get the list of actions
@@ -214,15 +214,15 @@ class human_pose_data:
 
                         if img_ == 0:
                             cv2.putText(image, 'Starting Data Collection into {}'.format(f_content['Data_Directory']),
-                                        (50, 50), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
+                                        (120, 129), cv2.FONT_HERSHEY_DUPLEX, 0.6, (0, 255, 150), 1, cv2.LINE_AA)
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
-                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 0, 0), 1, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
                             cv2.waitKey(2000)
 
                         else:
                             cv2.putText(image, 'Now Collecting Data for {}; {}'.format(action, folder),
-                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 1, (120, 100, 150), 1, cv2.LINE_AA)
+                                        (15, 12), cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 100, 0), 1, cv2.LINE_AA)
                             cv2.imshow('Data Collection Feed', image)
 
                         keypoints = self.extract_full_body(coords)
