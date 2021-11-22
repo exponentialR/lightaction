@@ -1,7 +1,12 @@
-# iamsMediapipe
+# iamsMediapipe Action Recogntion Built on Mediapipe
+https://user-images.githubusercontent.com/73752977/142786709-4adbadb4-13c9-4c0e-bf2f-0b309074346c.mp4
+
 
 #### Step 1 : Install Pycharm
 - Head over Pycharm Website and Install Pycharm. I use the Community or Edu edition.
+
+
+
 
 - Create a new Pycharm project
 
