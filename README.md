@@ -41,7 +41,7 @@ E --subfolder_numbers 30 --pat actionData --video_length 60
 If you have everything set up correctly you should have the followingas depicted in the screenshot.
 ![image](https://user-images.githubusercontent.com/73752977/142783752-a922de1f-790f-409c-8480-21ab3ceda92f.png)
 
-### Drawing only plots/landmarks
+#### Drawing only plots/landmarks
 To plot only the keypoints at realtime. Edit the run.py for the following, or create a new python script by calling the follwowing 
 - Plotting only the hands ```data.draw_only_hands```
 - Plotting only the face ```data._only_face```
@@ -55,6 +55,8 @@ There are 4 Options for data collection as provided in the code. Edit ```run.py`
 - Collecting pose data only ```#data.collect_data_POSE```
 - Collecting all hand, pose, facial data only ```#data.collect_data_WHOLE```
 
+#### Train
+To train your action recognition check out ```IAMSaction.ipnyb```
 
 
 
