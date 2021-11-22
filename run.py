@@ -1,18 +1,20 @@
 from collect_data_iams import human_pose_data
 
-y = human_pose_data()
+data = human_pose_data()
 # y.display_camera_with_mp()
-y.collect_data_WHOLE()
-# from collect_data_iams_csv import human_pose_data
-# y = human_pose_data()
-# y.collect_data_WHOLE()
-# import cv2
-# cam = cv2.VideoCapture(0)
-# # camera = cv2.VideoCapture(1)
-# while True:
-#     __, image = cam.read()
-#     # _, image = camera.read()
+data.collect_data_WHOLE()
+
 #
-#     cv2.imshow('Output eed', image)
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
+# //uncomment the code below to collect data for Hand
+# data.collect_data_HAND()
+
+# //  uncomment the code below to collect data for Pose
+# data.collect_data_POSE()
+
+# //uncomment the code below to collect data for Face
+# data.collect_data_FACE()
+
+# data._whole_body()
+# data._draw_only_hands()
+# data._only_face()
+# data._only_pose
