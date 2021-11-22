@@ -41,12 +41,20 @@ E --subfolder_numbers 30 --pat actionData --video_length 60
 If you have everything set up correctly you should have the followingas depicted in the screenshot.
 ![image](https://user-images.githubusercontent.com/73752977/142783752-a922de1f-790f-409c-8480-21ab3ceda92f.png)
 
+### Drawing only plots/landmarks
+To plot only the keypoints at realtime. Edit the run.py for the following, or create a new python script by calling the follwowing 
+- Plotting only the hands ```data.draw_only_hands```
+- Plotting only the face ```data._only_face```
+- plotting only the pose ```data._only_pose```
+- plotting all hand, pose, facial ```data._whole_body```
+
 #### Data Collection
-There are 4 Options for data collection as provided in the code.
-- Collecting hand data only 
-- Collecting face data only 
-- Collecting pose data only ```collect_data_pose
-- Collecting all hand, pose, facial data only.
+There are 4 Options for data collection as provided in the code. Edit ```run.py```  by uncommenting the following in accordance to what you are trying to do.
+- Collecting hand data only ```#data.collect_data_HAND```
+- Collecting face data only ```#data.collect_data_FACE```
+- Collecting pose data only ```#data.collect_data_POSE```
+- Collecting all hand, pose, facial data only ```#data.collect_data_WHOLE```
+
 
 
 
