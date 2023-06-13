@@ -1,6 +1,6 @@
 pip==21.2.3
 wheel==0.37.0
-setuptools==57.4.0
+setuptools==65.5.1
 opencv-python==4.5.3.56
 numpy==1.22.0
 mediapipe==0.8.8
