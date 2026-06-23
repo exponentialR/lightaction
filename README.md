@@ -1,4 +1,4 @@
-# iamsMediapipe Action Recogntion Built on Mediapipe
+# LightAction, a finegrained Action Recogntion Built on Mediapipe
 https://user-images.githubusercontent.com/73752977/142786709-4adbadb4-13c9-4c0e-bf2f-0b309074346c.mp4
 
 
@@ -17,7 +17,7 @@ https://user-images.githubusercontent.com/73752977/142786709-4adbadb4-13c9-4c0e-
 - create a new project
 - clone this repository 
 ```bash
-git clone https://github.com/exponentialR/iamsMediapipe.git
+git clone https://github.com/exponentialR/lightaction.git
 ```
 - Install requirements
 ```bash
